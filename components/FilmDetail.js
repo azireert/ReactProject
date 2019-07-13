@@ -1,8 +1,9 @@
 import React from 'react'
-import {StyleSheet, View, ActivityIndicator, ScrollView, Text, Image} from 'react-native'
+import {StyleSheet, View, ActivityIndicator, ScrollView, Text, Image, Button} from 'react-native'
 import {getFilmDetailFromApi, getImageFromApi} from '../API/TMDBApi'
 import moment from "moment";
 import numeral from 'numeral';
+import { connect } from 'react-redux'
 
 class FilmDetail extends React.Component {
     constructor(props) {
@@ -20,6 +21,11 @@ class FilmDetail extends React.Component {
                 isLoading: false
             })
         })
+    }
+
+    componentDidUpdate() {
+        console.log("componentDidUpdate : ")
+        console.log(this.props.favoritesFilm)
     }
 
     _displayLoading() {
@@ -44,6 +50,7 @@ class FilmDetail extends React.Component {
                     <View style={styles.title_container}>
                         <Text style={styles.title_text}>{film.title}</Text>
                     </View>
+                    <Button title="Favoris" onPress={() => this._toggleFavorite()}/>
                     <View style={styles.overview_container}>
                         <Text style={styles.description_text}>{film.overview}</Text>
                     </View>
@@ -74,6 +81,11 @@ class FilmDetail extends React.Component {
         }
     }
 
+    _toggleFavorite() {
+        const action = { type: "TOGGLE_FAVORITE", value: this.state.film }
+        this.props.dispatch(action)
+    }
+
     _afficherList(list) {
         var genre = '';
         for(var i = 0; i < list.length; i++){
@@ -97,7 +109,6 @@ class FilmDetail extends React.Component {
     }
 
     render() {
-
         return (
             <View style={styles.main_container}>
                 {this._displayLoading()}
@@ -158,4 +169,16 @@ const styles = StyleSheet.create({
     }
 })
 
-export default FilmDetail
+const mapStateToProps = (state) => {
+    return {
+        favoritesFilm: state.favoritesFilm
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FilmDetail)

@@ -20,7 +20,7 @@ class FilmItem extends React.Component {
                             <Text style={styles.title_text}>{film.title}</Text>
                         </View>
                         <View style={styles.vote_container}>
-                            <Text>{film.vote_average}</Text>
+                            <Text>Note : {film.vote_average}</Text>
                         </View>
                     </View>
                     <View style={styles.description_container}>
